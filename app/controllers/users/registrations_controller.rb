@@ -1,17 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
     respond_to :json
-    # before_action :configure_sign_up_params, only: [:create]
-
-    # def create
-    #     binding.pry
-    #     super
-    # end
 
     private
-
-    # def configure_sign_up_params
-    #     devise_parameter_sanitizer.permit(:sign_up, keys: [:role, :deposit])
-    # end
 
     def respond_with(resource, _opts = {})
       resource.persisted? ? register_success : register_failed
