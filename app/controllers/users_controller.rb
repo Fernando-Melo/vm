@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+    before_action :authenticate_user!
     before_action :check_current_user_buyer, only: %i[ deposit reset buy ]
     before_action :set_product, only: %i[ buy ]
     before_action :check_quantity, only: %i[ buy ]
@@ -53,8 +54,14 @@ class UsersController < ApplicationController
         @total_change = current_user.deposit - @total_spent 
         change_result = give_change
 
+        old_deposit = current_user.deposit
+
+        # assuming machine will give back all the money after purchase
+        current_user.update!(deposit: 0)
+
         render json: {
-            deposit: current_user.deposit,
+            deposit: old_deposit,
+            spent: @total_spent,
             change: @total_change,
             change_result: change_result
         }

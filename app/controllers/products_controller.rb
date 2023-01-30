@@ -1,4 +1,5 @@
 class ProductsController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
   before_action :set_product, only: %i[ show update destroy ]
   before_action :check_permission_on_product, only: %i[ create update destroy ]
 
