@@ -234,7 +234,6 @@ RSpec.describe UsersController, type: :controller do
                 post  :deposit, params: {deposit: 50}
 
                 expect(response.status).to eq(401)
-                
             end
         end
     end        

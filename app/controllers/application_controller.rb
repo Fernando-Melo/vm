@@ -7,12 +7,19 @@ class ApplicationController < ActionController::API
     def check_concurrent_session
       if already_logged_in?
 
-        sign_out_and_redirect(current_user)
+        sign_out current_user
+        render json: { message: "Token Expired Please Log In Again"}, status: 401 
       end
     end
   
     def already_logged_in?
-      current_user && !(session[:login_token] == current_user.current_login_token)
+      current_user && !(bearer_token == current_user.current_login_token)
+    end
+
+    def bearer_token
+      pattern = /^Bearer /
+      header  = request.headers['Authorization']
+      header.gsub(pattern, '') if header && header.match(pattern)
     end
     
     def configure_permitted_parameters

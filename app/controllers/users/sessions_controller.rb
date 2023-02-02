@@ -16,9 +16,7 @@ class Users::SessionsController < Devise::SessionsController
 
     private
     def set_login_token
-      token = Devise.friendly_token
-      session[:login_token] = token
-      current_user.current_login_token = token
+      current_user.current_login_token = request.env["warden-jwt_auth.token"]
       current_user.save
     end
 

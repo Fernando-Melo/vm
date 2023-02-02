@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     def destroy
         if current_user
             current_user.destroy!
-            return render json: { message: "Deleted User"}, status: 200 if current_user
+            return render json: { message: "Deleted User"}, status: 200
         end
 
         render json: { message: "Unauthorized"}, status: 401
@@ -112,5 +112,4 @@ class UsersController < ApplicationController
     def check_current_user_buyer
         render json: {message: "Unauthorized"}, status: 401 unless current_user&.role == "buyer"
     end
-
 end
