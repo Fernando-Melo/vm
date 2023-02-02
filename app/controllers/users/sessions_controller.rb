@@ -1,5 +1,12 @@
 class Users::SessionsController < Devise::SessionsController
     respond_to :json
+    skip_before_action :check_concurrent_session
+
+    def create
+      super
+
+      set_login_token
+    end
 
     # DELETE /resource
     def destroy
@@ -8,6 +15,13 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     private
+    def set_login_token
+      token = Devise.friendly_token
+      session[:login_token] = token
+      current_user.current_login_token = token
+      current_user.save
+    end
+
     def respond_with(resource, _opts = {})
       render json: { message: "Logged in." }, status: :ok
     end

@@ -56,6 +56,6 @@ class ProductsController < ApplicationController
     end
 
     def check_permission_on_product
-      render json: {message: "Unauthorized"} if !authorized_product_creator?
+      render json: {message: "Unauthorized"}, status: 401 if !authorized_product_creator?
     end
 end

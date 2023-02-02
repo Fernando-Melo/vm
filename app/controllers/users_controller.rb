@@ -11,19 +11,28 @@ class UsersController < ApplicationController
     def show
         return render json: User.find_by(id: params[:id]) if current_user&.id&.to_s == params[:id] || current_user&.role == "admin"
 
-        render json: { message: "Unauthorized"}
+        render json: { message: "Unauthorized"}, status: 401
+    end
+
+    def destroy
+        if current_user
+            current_user.destroy!
+            return render json: { message: "Deleted User"}, status: 200 if current_user
+        end
+
+        render json: { message: "Unauthorized"}, status: 401
     end
 
     def show_all
         return render json: User.all if current_user&.role == "admin"
 
-        render json: { message: "Unauthorized"}
+        render json: { message: "Unauthorized"}, status: 401
     end
 
     def update
         return render json: current_user if current_user&.update!(user_params)
         
-        render json: { message: "Could not update user" }
+        render json: { message: "Could not update user" },status: 500
     end
 
     def deposit
@@ -35,7 +44,7 @@ class UsersController < ApplicationController
             } 
         end
         
-        render json: { message: "Invalid Amount"}
+        render json: { message: "Invalid Amount"}, status: 422 
     end
 
     def reset
@@ -45,9 +54,6 @@ class UsersController < ApplicationController
         return render json: { 
             message: "Reset! Please collect #{old_deposit}",
         } 
-
-        
-        render json: { message: "Invalid Amount"}
     end
 
     def buy
@@ -86,16 +92,16 @@ class UsersController < ApplicationController
     def set_product
         @product = Product.find_by(id: params[:product_id])
 
-        render json: { message: "Product does not exist"} unless @product
+        render json: { message: "Product does not exist"}, status: 404 unless @product
     end
 
     def check_quantity
-        render json: { message: "Product out of stock for the quantity requested"} if @product.amount_available < params[:quantity].to_i || params[:quantity].to_i <= 0
+        render json: { message: "Product out of stock for the quantity requested"}, status: 422 if @product.amount_available < params[:quantity].to_i || params[:quantity].to_i <= 0
     end
  
     def check_deposit
         @total_spent = @product.cost * params[:quantity].to_i
-        render json: { message: "Insufficient Funds"} if @total_spent > current_user.deposit
+        render json: { message: "Insufficient Funds"}, status: 422 if @total_spent > current_user.deposit
     end   
 
 
@@ -104,7 +110,7 @@ class UsersController < ApplicationController
     end
 
     def check_current_user_buyer
-        render json: {message: "Unauthorized"} unless current_user&.role == "buyer"
+        render json: {message: "Unauthorized"}, status: 401 unless current_user&.role == "buyer"
     end
 
 end

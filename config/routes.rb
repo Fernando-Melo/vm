@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     match '/deposit', to: 'users#deposit', via: :post
     match '/reset', to: 'users#reset', via: :get
     match '/buy', to: 'users#buy', via: :post
+    match '/user', to: 'users#create', via: :post
+    match '/user', to: 'users#destroy', via: :delete
   end
 
 end
