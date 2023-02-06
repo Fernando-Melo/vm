@@ -1,7 +1,8 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :set_product, only: %i[ show update destroy ]
-  before_action :check_permission_on_product, only: %i[ create update destroy ]
+  before_action :check_permission_on_product, only: %i[ update destroy ]
+  before_action :check_seller_permission, only: %i[ create ]
 
   # GET /products
   def index
@@ -57,5 +58,9 @@ class ProductsController < ApplicationController
 
     def check_permission_on_product
       render json: {message: "Unauthorized"}, status: 401 if !authorized_product_creator?
+    end
+
+    def check_seller_permission
+      render json: {message: "Unauthorized"}, status: 401 unless current_user.role == "seller"
     end
 end
