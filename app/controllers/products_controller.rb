@@ -49,7 +49,7 @@ class ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.fetch(:product, {}).permit(:amount_available, :cost, :product_name, :seller_id)
+      params.fetch(:product, {}).permit(:amount_available, :cost, :product_name)
     end
 
     def authorized_product_creator?
@@ -57,7 +57,7 @@ class ProductsController < ApplicationController
     end
 
     def check_permission_on_product
-      render json: {message: "Unauthorized"}, status: 401 if !authorized_product_creator?
+      render json: {message: "Unauthorized"}, status: 401 unless authorized_product_creator?
     end
 
     def check_seller_permission
