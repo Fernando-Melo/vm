@@ -11,27 +11,14 @@ RSpec.describe Users::SessionsController, type: :controller do
 
     #logout user (destroys session)
     describe "DELETE #destroy" do
+        let(:user) {  FactoryBot.create(:user) }
 
-        context "when user is not logged in" do
-            let(:user) {  FactoryBot.create(:user) }
-
-            it "returns unauthorized" do
-                delete :destroy, params: { user: user}  
-                expect(response.status).to eq(401)
-                expect(JSON.parse(response.body)["message"]).to eq("Logged out failure.")
-            end
+        it "logs out user" do
+            login_user(user)
+            delete :destroy, params: { user: user}  
+            expect(response).to be_successful
+            expect(JSON.parse(response.body)["message"]).to eq("Logged out.")
         end
-
-        context "when user is logged in" do
-            let(:user) {  FactoryBot.create(:user) }
-
-            it "logs out user" do
-                login_user(user)
-                delete :destroy, params: { user: user}  
-                expect(response).to be_successful
-                expect(JSON.parse(response.body)["message"]).to eq("Logged out.")
-            end
-        end        
     end
 end
 

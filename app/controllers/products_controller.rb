@@ -18,7 +18,7 @@ class ProductsController < ApplicationController
 
   # POST /products
   def create
-    @product = Product.new(product_params)
+    @product = Product.new(product_params.to_h.merge(seller_id: current_user.id))
 
     if @product.save
       render json: @product, status: :created, location: @product
@@ -29,7 +29,7 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/1
   def update
-    if @product.update(product_params)
+    if @product.update(product_params.to_h.merge(seller_id: current_user.id))
       render json: @product
     else
       render json: @product.errors, status: :unprocessable_entity

@@ -2,10 +2,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     include RackSessionFix
     respond_to :json
 
-    def create
-      super
-    end
-
     private
 
     def respond_with(resource, _opts = {})

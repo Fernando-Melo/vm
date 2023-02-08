@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     match '/buy', to: 'users#buy', via: :post
     match '/user', to: 'users#create', via: :post
     match '/user', to: 'users#destroy', via: :delete
+    match '/logout/all', to: 'users/sessions#destroy_all', via: :delete
   end
 
 end
